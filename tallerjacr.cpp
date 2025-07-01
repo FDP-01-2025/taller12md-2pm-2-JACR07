@@ -3,9 +3,9 @@
 using namespace std;
 
 struct Estudiante {
-    string nombre,nombrenuevo;
-    string carnet,carnetnuevo;
-    int edad,edadnuevo;
+    string nombre;
+    string carnet;
+    int edad;
 };
 
 // Función para agregar estudiante (CREATE)
@@ -53,42 +53,44 @@ void modificarEstudiante() {
     ofstream temp("temp.txt");
     Estudiante e;
     string buscado;
+    bool eliminado = false;
 
-    if (archivo.is_open() && temp.is_open()) {
-        cout << "\n--- Lista de Estudiantes ---\n";
-        while (archivo >> e.nombre >> e.carnet >> e.edad) {
-            cout << "Nombre: " << e.nombre 
-                 << ", Carnet: " << e.carnet
-                 << ", Edad: " << e.edad << endl;
-        }
-        cout << "ingresa el carnet del usuario a modificar: ";
+        cout << "ingresa el carnet del estudiante a modificar: ";
         cin >> buscado;
 
-        if (e.carnet == buscado){
-             cout << "Inserta nuevo nombre";
-            cin >> e.nombrenuevo;
-            cout << "inserta nuevo carnet";
-            cin >> e.carnetnuevo;
-            cout << "ingresa nueva edad";
-            cin >> e.edadnuevo;
-
-    ofstream archivo("estudiantes.txt", ios::app);
-    if (archivo.is_open()) {
-        archivo << e.nombrenuevo << " " << e.carnetnuevo << " " << e.edadnuevo;
+     if (archivo.is_open() && temp.is_open()) { 
+        while (archivo >> e.nombre >> e.carnet >> e.edad) {
+            if (e.carnet == buscado) // si el carnet ingresado es uno de los guardados procedera con el codigo
+            {
+            Estudiante nuevo; 
+            cout << "Nuevo Nombre (sin espacios): ";
+            cin >> nuevo.nombre;
+            cout << "Nuevo Carnet: ";
+            cin >> nuevo.carnet;
+            cout << "Nueva Edad: ";
+            cin >> nuevo.edad;
+            eliminado = true; 
+            temp << nuevo.nombre << " " << nuevo.carnet << " " << nuevo.edad << endl; // se escriben en el artchivo temp
+            } 
+            else
+            {
+                temp << e.nombre << " " << e.carnet << " " << e.edad << endl;
+            }
+        }
         archivo.close();
-        cout << "Estudiante modificado correctamente.\n";
-    } else {
-        cout << "Error al abrir el archivo.\n";
-    } 
-            archivo.close();
-        }
-        else{
-            cout << "carnet no encontrado";
-        }
-        
-    }
+        temp.close();
+        remove("estudiantes.txt");
+        rename("temp.txt", "estudiantes.txt");
 
-    // Debes permitir actualizar nombre, carnet y/o edad de un estudiante identificado por su carnet.
+        if (eliminado)
+            cout << "Estudiante eliminado correctamente.\n";
+        else
+            cout << "Carnet no encontrado.\n";
+    } else {
+        cout << "Error abriendo los archivos.\n";
+    }
+    // Debes permitir actualizar nombre, carnet y/o edad
+    // de un estudiante identificado por su carnet.
     // Puedes usar o no manejo de archivos.
     // Si lo implementas con archivos correctamente, obtendrás **2 puntos extra**.
 }
